@@ -6,18 +6,16 @@
      a File, byte[], String (which will be converted to UTF-8 byte[]), or an InputStream.
      An alternate hash algorithm can be optionally provided."))
 
-(def byte-array-type (class (make-array Byte/TYPE 0)))
-
 (extend-protocol Hashing
-  String
-  (hash-of
-    ([s] (hash-of s "SHA1"))
-    ([s hash-type] (-> s (.getBytes "UTF-8") (hash-of hash-type))))
-  byte-array-type
+  (class (byte-array 0))
   (hash-of
     ([bytes] (hash-of bytes "SHA1"))
     ([bytes hash-type]
       (-> bytes java.io.ByteArrayInputStream. (hash-of hash-type))))
+  String
+  (hash-of
+    ([s] (hash-of s "SHA1"))
+    ([s hash-type] (-> s (.getBytes "UTF-8") (hash-of hash-type))))
   java.io.File
   (hash-of
     ([f] (hash-of f "SHA1"))
