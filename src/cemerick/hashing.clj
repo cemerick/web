@@ -1,4 +1,5 @@
-(ns cemerick.hashing)
+(ns cemerick.hashing
+  (:import java.security.MessageDigest))
 
 (defprotocol Hashing
   (hash-of [data] [data hash-type]
@@ -11,7 +12,8 @@
   (hash-of
     ([bytes] (hash-of bytes "SHA1"))
     ([bytes hash-type]
-      (-> bytes java.io.ByteArrayInputStream. (hash-of hash-type))))
+     (.digest (doto (MessageDigest/getInstance hash-type)
+                (.update ^bytes bytes)))))
   String
   (hash-of
     ([s] (hash-of s "SHA1"))
@@ -28,7 +30,7 @@
   (hash-of
     ([is] (hash-of is "SHA1"))
     ([is hash-type]
-      (let [digest (java.security.MessageDigest/getInstance hash-type)
+      (let [digest (MessageDigest/getInstance hash-type)
             arr (make-array Byte/TYPE 1024)]
         (loop [len (.read is arr)]
           (when-not (== -1 len)
