@@ -1,7 +1,7 @@
 (ns cemerick.web-util
   (:require [net.cgrand.enlive-html :as en]
             clojure.string
-            (ring.util.response :as resp)))
+            [ring.util.response :as resp]))
 
 (defn minify-css
   "Minifies the given CSS string, returning the result.
